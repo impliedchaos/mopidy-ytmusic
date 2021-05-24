@@ -29,6 +29,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
+        . $HOME/.poetry/env
         prev=$(git describe --tags)
         poetry version ${{ github.event.input.relversion }}
         poetry run dephell convert
