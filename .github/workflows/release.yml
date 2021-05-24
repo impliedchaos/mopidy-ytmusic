@@ -3,7 +3,7 @@ name: Create Release
 on:
   workflow_dispatch:
     inputs:
-      relversion:
+      relVersion:
         description: 'Increment `patch`, `minor`, or `major` version, or specify semver manually.'
         required: true
         default: 'patch'
@@ -31,7 +31,7 @@ jobs:
       run: |
         . $HOME/.poetry/env
         prev=$(git describe --tags)
-        poetry version ${{ github.event.input.relversion }}
+        poetry version ${{ github.event.inputs.relVersion }}
         rel=$(poetry version | awk '{print $2}')
         poetry run poetry2setup > setup.py
         poetry run black .
