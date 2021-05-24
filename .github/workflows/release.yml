@@ -31,7 +31,6 @@ jobs:
       run: |
         . $HOME/.poetry/env
         prev=$(git describe --tags)
-        poetry version ${{ github.event.input.relversion }}
         rel=$(poetry version | awk '{print $2}')
         poetry run poetry2setup > setup.py
         poetry run black .
@@ -48,4 +47,4 @@ jobs:
         poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
         poetry build
         hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}.-py3-none-any.whl v${rel}
-        
+        poetry version ${{ github.event.input.relversion }}
