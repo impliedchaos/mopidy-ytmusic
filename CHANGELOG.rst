@@ -2,6 +2,14 @@
 Changelog
 *********
 
+v0.3.0
+========================================
+
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- more fixes.
+
 v0.2.6
 ========================================
 
