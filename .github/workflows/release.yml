@@ -27,7 +27,7 @@ jobs:
         poetry install
     - name: Update version, lint, commit, build, release
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         prev=$(git describe --tags)
         poetry version ${{ github.event.input.relversion }}
