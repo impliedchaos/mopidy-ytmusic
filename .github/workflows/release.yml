@@ -46,6 +46,6 @@ jobs:
         git commit -m "v${rel}"
         git push
         poetry build
-        hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}.-py3-none-any.whl v${rel}
+        hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}-py3-none-any.whl v${rel}
         poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
 
