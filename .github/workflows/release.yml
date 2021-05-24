@@ -9,7 +9,7 @@ on:
         default: 'patch'
 
 jobs:
-  build:
+  build and publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
         curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
         . $HOME/.poetry/env
         poetry update
-    - name: Update version, lint, commit, build, release
+    - name: Increment version, lint, changelog, commit, build, and publish
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
