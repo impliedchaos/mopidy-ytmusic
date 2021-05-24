@@ -29,7 +29,7 @@ flake8 = "^3.8.4"
 setuptools = "^51.0.0"
 Sphinx = "^3.3.1"
 poetry2setup = "^1.0.0"
-isort = "^4"
+isort = "^5"
 black = { version = "*", allow-prereleases = true }
 
 [build-system]
