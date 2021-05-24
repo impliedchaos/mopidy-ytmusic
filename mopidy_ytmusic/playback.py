@@ -1,9 +1,11 @@
-import requests
 import re
 from urllib.parse import parse_qs
+
+import requests
 from mopidy import backend, httpclient
-from mopidy_ytmusic import logger
 from youtube_dl import YoutubeDL
+
+from mopidy_ytmusic import logger
 
 
 class YTMusicPlaybackProvider(backend.PlaybackProvider):
