@@ -21,7 +21,7 @@ jobs:
         python-version: '3.x'
     - name: Install dependencies
       run: |
-        apt-get update && apt-get install hub
+        sudo apt-get update && sudo apt-get install hub
         curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
         . $HOME/.poetry/env
         poetry install
