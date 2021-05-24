@@ -32,10 +32,10 @@ jobs:
         . $HOME/.poetry/env
         prev=$(git describe --tags)
         poetry version ${{ github.event.input.relversion }}
-        poetry run dephell convert
+        rel=$(poetry version | awk '{print $2}')
+        poetry run poetry2setup > setup.py
         poetry run black .
         poetry run isort .
-        rel=$(grep -Po '(?<=version=")[^"]+' setup.py)
         echo -e "\n$rel\n========================================\n" > /tmp/release.txt
         git log ${prev}..HEAD --oneline | sed -E 's/^\w+/-/' >> /tmp/release.txt
         sed -i '3r /tmp/release.txt' CHANGELOG.rst
