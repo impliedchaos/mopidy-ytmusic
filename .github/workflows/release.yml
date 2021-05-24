@@ -30,10 +30,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         . $HOME/.poetry/env
-        prev=$(git describe --tags); echo "Previous Version: $prev"
+        prev=$(git describe --tags); echo "Previous Version: ${prev}"
         poetry version ${{ github.event.inputs.relVersion }}
         rel=$(poetry version | awk '{print $2}')
         poetry run poetry2setup > setup.py
+        poetry export -f requirements.txt --output requirements.txt
         poetry run black .
         poetry run isort .
         echo -e "\nv$rel\n========================================\n" > /tmp/release.txt
