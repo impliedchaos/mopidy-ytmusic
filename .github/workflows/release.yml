@@ -1,0 +1,48 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      relversion:
+        description: 'Increment `patch`, `minor`, or `major` version, or specify semver manually.'
+        required: true
+        default: 'patch'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        apt-get update && apt-get install hub
+        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+        . $HOME/.poetry/env
+        poetry install
+    - name: Update version, lint, commit, build, release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        prev=$(git describe --tags)
+        poetry version ${{ github.event.input.relversion }}
+        poetry run dephell convert
+        poetry run black .
+        poetry run isort .
+        rel=$(grep -Po '(?<=version=")[^"]+' setup.py)
+        echo -e "\n$rel\n========================================\n" > /tmp/release.txt
+        git log ${prev}..HEAD --oneline | sed -E 's/^\w+/-/' >> /tmp/release.txt
+        sed -i '3r /tmp/release.txt' CHANGELOG.rst
+        sed -i '1d; 3d' /tmp/release.txt
+        git add .
+        git commit -m "v${rel}"
+        git push
+        poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+        poetry build
+        hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}.-py3-none-any.whl v${rel}
+        
