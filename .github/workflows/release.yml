@@ -53,17 +53,17 @@ jobs:
         git log v${prev}..HEAD --oneline | sed -E 's/^\w+/-/' >> /tmp/release.txt
         sed -i '3r /tmp/release.txt' CHANGELOG.rst
         sed -i '1d; 3d' /tmp/release.txt
+        # Build the release.
+        poetry build
         # Configure git user.
         git config user.name github-actions
         git config user.email github-actions@github.com
         # Add all of our changes.
         git add .
-        # Commit and push our changes.
+        # Commit and push our changes to GitHub.
         git commit -m "v${rel}"
         git push
-        # Build the release.
-        poetry build
+        # Publish release to pypi.
+        test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish || echo "No PYPI API token defined."
         # Publish release to github.
         hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}-py3-none-any.whl v${rel}
-        # Publish release to pypi.
-        test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish
