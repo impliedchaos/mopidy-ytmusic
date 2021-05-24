@@ -28,9 +28,10 @@ jobs:
     - name: Update version, lint, commit, build, release
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
       run: |
         . $HOME/.poetry/env
-        prev=$(git describe --tags); echo "Previous Version: ${prev}"
+        prev=$(poetry version | awk '{print $2}')
         poetry version ${{ github.event.inputs.relVersion }}
         rel=$(poetry version | awk '{print $2}')
         poetry run poetry2setup > setup.py
@@ -38,7 +39,7 @@ jobs:
         poetry run black .
         poetry run isort .
         echo -e "\nv$rel\n========================================\n" > /tmp/release.txt
-        git log ${prev}..HEAD --oneline | sed -E 's/^\w+/-/' >> /tmp/release.txt
+        git log v${prev}..HEAD --oneline | sed -E 's/^\w+/-/' >> /tmp/release.txt
         sed -i '3r /tmp/release.txt' CHANGELOG.rst
         sed -i '1d; 3d' /tmp/release.txt
         git config user.name github-actions
@@ -48,5 +49,4 @@ jobs:
         git push
         poetry build
         hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}-py3-none-any.whl v${rel}
-        poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
-
+        [ -n "$POETRY_PYPI_TOKEN_PYPI"] && poetry publish
