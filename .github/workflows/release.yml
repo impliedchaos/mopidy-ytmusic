@@ -61,7 +61,7 @@ jobs:
     - name: Release notes.
       if: ${{ github.event.inputs.relNotes != '' }}
       run: |
-        echo -e "${{ github.event.inputs.relNotes }}\n\nChanges:\n--------\n" > /tmp/relnote
+        echo -e "${{ github.event.inputs.relNotes }}\n\n### Changes:\n" > /tmp/relnote
         sed -i '2r /tmp/relnote' /tmp/release.txt
     - name: Build
       run: poetry build
