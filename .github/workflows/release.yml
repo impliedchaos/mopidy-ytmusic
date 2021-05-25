@@ -62,7 +62,7 @@ jobs:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
       run: test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish || echo "Skipping... No PYPI API token defined."
     - name: Commit Changes
-      run: git add . && it commit -m "v${rel}" && git push
+      run: git add . && git commit -m "v${rel}" && git push
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
