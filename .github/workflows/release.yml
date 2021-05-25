@@ -9,7 +9,7 @@ on:
         default: 'patch'
 
 jobs:
-  build_and_publish:
+  release:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -30,6 +30,9 @@ jobs:
         PATH="$HOME/.poetry/bin:$PATH"
         # install our dependencies and update our poetry.lock file
         poetry update
+        # Configure git user.
+        git config user.name github-actions
+        git config user.email github-actions@github.com
     - name: Increment version
       run: |
         # Get the previous version.
@@ -41,11 +44,7 @@ jobs:
         # save env for later steps
         echo -e "prev=$prev\nrel=$rel" >> $GITHUB_ENV
     - name: Generate requirements.txt
-      run: |
-        # Convert pyproject.toml to setup.py
-        poetry run poetry2setup > setup.py
-        # Generate requirements.txt
-        poetry export -f requirements.txt --output requirements.txt
+      run: poetry run poetry2setup > setup.py && poetry export -f requirements.txt --output requirements.txt
     - name: Black & isort
       run: poetry run black . && poetry run isort .
     - name: Update CHANGELOG.rst
@@ -63,15 +62,7 @@ jobs:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
       run: test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish || echo "Skipping... No PYPI API token defined."
     - name: Commit Changes
-      run: |
-        # Configure git user.
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        # Add all of our changes.
-        git add .
-        # Commit and push our changes to GitHub.
-        git commit -m "v${rel}"
-        git push
+      run: git add . && it commit -m "v${rel}" && git push
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
