@@ -31,7 +31,7 @@ jobs:
         # install our dependencies and update our poetry.lock file
         poetry update
         # Configure git user.
-        git config user.name github-actions
+        git config user.name "$GITHUB_ACTOR"
         git config user.email github-actions@github.com
     - name: Increment version
       run: |
