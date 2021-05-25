@@ -59,7 +59,7 @@ jobs:
         sed -i '3r /tmp/release.txt' CHANGELOG.rst   # Insert after the 3rd line.
         sed -i '1d; 3d' /tmp/release.txt   # Removes the 1st and 3rd lines (RST formatting) for use in GH release.
     - name: Release notes.
-      if: ${{ github.even.inputs.relNotes != '' }}
+      if: ${{ github.event.inputs.relNotes != '' }}
       run: |
         echo -e "${{ github.event.inputs.relNotes }}\n\nChanges:\n--------\n" > /tmp/relnote
         sed -i '2r /tmp/relnote' /tmp/release.txt
