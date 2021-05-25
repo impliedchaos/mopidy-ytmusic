@@ -61,7 +61,7 @@ jobs:
     - name: Publish to PYPI
       env:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
-      run: test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish || echo "No PYPI API token defined."
+      run: test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish || echo "Skipping... No PYPI API token defined."
     - name: Commit Changes
       run: |
         # Configure git user.
@@ -72,7 +72,5 @@ jobs:
         # Commit and push our changes to GitHub.
         git commit -m "v${rel}"
         git push
-    - name: Publish to PYPI
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: Create GitHub Release
       run: hub release create -F /tmp/release.txt -a dist/Mopidy-YTMusic-${rel}.tar.gz -a dist/Mopidy_YTMusic-${rel}-py3-none-any.whl v${rel}
