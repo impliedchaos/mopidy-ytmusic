@@ -7,6 +7,9 @@ on:
         description: 'Increment `patch`, `minor`, or `major` version, or specify semver manually.'
         required: true
         default: 'patch'
+      relNotes:
+        description: 'General comment about this release that will appear in the commit logs and release message.'
+        required: false
 
 jobs:
   release:
@@ -55,6 +58,11 @@ jobs:
         git log v${prev}..HEAD --oneline | sed -E 's/^\w+/-/' >> /tmp/release.txt
         sed -i '3r /tmp/release.txt' CHANGELOG.rst   # Insert after the 3rd line.
         sed -i '1d; 3d' /tmp/release.txt   # Removes the 1st and 3rd lines (RST formatting) for use in GH release.
+    - name: Release notes.
+      if: ${{ github.even.inputs.relNotes != '' }}
+      run: |
+        echo -e "${{ github.event.inputs.relNotes }}\n\nChanges:\n--------\n" > /tmp/relnote
+        sed -i '2r /tmp/relnote' /tmp/release.txt
     - name: Build
       run: poetry build
     - name: Publish to PYPI
