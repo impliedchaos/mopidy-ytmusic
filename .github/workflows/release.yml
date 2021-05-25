@@ -25,11 +25,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Configure git user.
-        curl -sSL -u "x-access-token:${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user
-        GITHUB_EMAIL=$(curl -sSL -u "x-access-token:${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user | perl -MJSON -nE 'say decode_json($_)->{email}')
+        curl -sSL -u "x-access-token:${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user/${GITHUB_ACTOR}
+        GITHUB_EMAIL=$(curl -sSL -u "x-access-token:${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user/${GITHUB_ACTOR} | perl -MJSON -E 'say decode_json(join("",<STDIN>)->{email}')
         echo $GITHUB_EMAIL
+        test -z "$GITHUB_EMAIL" && GITHUB_EMAIL="github-actions@github.com" || echo
         git config user.name "$GITHUB_ACTOR"
-        git config user.email github-actions@github.com
+        git config user.email "$GITHUB_EMAIL"
         # install hub so we can create a GitHub release easily.
         sudo apt-get update && sudo apt-get install hub
         # install poetry
