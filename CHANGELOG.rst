@@ -2,6 +2,19 @@
 Changelog
 *********
 
+v1.0.7
+========================================
+
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+
 v1.0.6
 ========================================
 
