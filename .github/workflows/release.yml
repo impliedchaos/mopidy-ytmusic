@@ -25,8 +25,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Configure git user.
-        curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user
-        GITHUB_EMAIL=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user | perl -MJSON -nE 'say decode_json($_)->{email}')
+        curl -sSL -u "username:${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user
+        GITHUB_EMAIL=$(curl -sSL -u "username:${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user | perl -MJSON -nE 'say decode_json($_)->{email}')
         echo $GITHUB_EMAIL
         git config user.name "$GITHUB_ACTOR"
         git config user.email github-actions@github.com
