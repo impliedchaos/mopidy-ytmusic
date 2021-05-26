@@ -62,9 +62,10 @@ jobs:
       if: ${{ github.ref == 'refs/heads/master' }}
       env:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        RELNOTES: ${{ github.event.inputs.relNotes }}
       run: test -n "$POETRY_PYPI_TOKEN_PYPI" && poetry publish || echo "No PYPI API token available.  Skipping..."
     - name: Commit Changes
-      run: git add . && git commit -F /tmp/release.txt && git push
+      run: git add . && git commit -m "v${rel}" -m "$RELNOTES" && git push
     - name: Create GitHub Release
       if: ${{ github.ref == 'refs/heads/master' }}
       env:
