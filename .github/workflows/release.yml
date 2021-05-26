@@ -53,7 +53,9 @@ jobs:
         sed -i '1d; 3d; 2a \\n### Changes:' /tmp/release.txt  # Update for use in GH release.
     - name: Release notes.
       if: ${{ github.event.inputs.relNotes != '' }}
-      run: echo -e "${{ github.event.inputs.relNotes }}\n" > /tmp/relnote && sed -i '2r /tmp/relnote' /tmp/release.txt
+      env:
+        RELNOTES: ${{ github.event.inputs.relNotes }}
+      run: echo -e "$RELNOTES\n" > /tmp/relnote && sed -i '2r /tmp/relnote' /tmp/release.txt
     - name: Build
       run: poetry build
     - name: Publish to PYPI
