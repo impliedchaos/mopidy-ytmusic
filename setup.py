@@ -15,7 +15,7 @@ entry_points = {"mopidy.ext": ["ytmusic = mopidy_ytmusic:Extension"]}
 
 setup_kwargs = {
     "name": "mopidy-ytmusic",
-    "version": "1.0.12",
+    "version": "1.1.0",
     "description": "Mopidy extension for playling music/managing playlists in Youtube Music",
     "long_description": None,
     "author": "Ozymandias (Tomas Ravinskas)",
@@ -29,5 +29,6 @@ setup_kwargs = {
     "entry_points": entry_points,
     "python_requires": ">=3.7,<4.0",
 }
+
 
 setup(**setup_kwargs)
