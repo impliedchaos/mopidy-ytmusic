@@ -36,7 +36,7 @@ jobs:
     - name: Increment version
       run: |
         prev=$(poetry version | awk '{print $2}')             # Get the previous version.
-        poetry version ${{ github.event.inputs.relVersion }}  # Set the new version.
+        poetry version $INPUT_RELVERSION                      # Set the new version.
         rel=$(poetry version | awk '{print $2}')              # Get the current version.
         echo -e "prev=${prev}\nrel=${rel}" >> $GITHUB_ENV     # save env for later steps
     - name: Generate requirements.txt
@@ -53,9 +53,7 @@ jobs:
         sed -i '1d; 3d; 2a \\n### Changes:' /tmp/release.txt  # Update for use in GH release.
     - name: Release notes.
       if: ${{ github.event.inputs.relNotes != '' }}
-      env:
-        RELNOTES: ${{ github.event.inputs.relNotes }}
-      run: echo -e "$RELNOTES\n" > /tmp/relnote && sed -i '2r /tmp/relnote' /tmp/release.txt
+      run: echo -e "$INPUT_RELNOTES\n" > /tmp/relnote && sed -i '2r /tmp/relnote' /tmp/release.txt
     - name: Build
       run: poetry build
     - name: Publish to PYPI
